@@ -67,7 +67,9 @@ public class TextFile extends ArrayList<String> {
         TextFile t = new TextFile("./src/net/mindview/util/TextFile.java");
         t.write("out2.java");
 
-        TreeSet<String> treeSet = new TreeSet<>(new TextFile("./src/net/mindview/util/TextFile.java", "\\W+"));
-        System.out.println(treeSet.headSet("a"));
+        TreeSet<String> treeSet = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        treeSet.addAll(new TextFile("./src/net/mindview/util/TextFile.java", "\\W+"));
+
+        System.out.println(treeSet.headSet("z"));
     }
 }
