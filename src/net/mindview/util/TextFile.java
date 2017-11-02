@@ -3,6 +3,7 @@ package net.mindview.util;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TreeSet;
 
 /**
  * Created by 10564 on 2017-10-31.
@@ -56,5 +57,17 @@ public class TextFile extends ArrayList<String> {
         } catch (FileNotFoundException e){
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws IOException{
+
+        String f = TextFile.read("./src/net/mindview/util/TextFile.java");
+        TextFile.write("out.java", f);
+
+        TextFile t = new TextFile("./src/net/mindview/util/TextFile.java");
+        t.write("out2.java");
+
+        TreeSet<String> treeSet = new TreeSet<>(new TextFile("./src/net/mindview/util/TextFile.java", "\\W+"));
+        System.out.println(treeSet.headSet("a"));
     }
 }

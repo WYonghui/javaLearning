@@ -1,34 +1,73 @@
-package ContainerTest;
+package net.mindview.util;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * Created by 10564 on 2017-10-12.
+ * Created by 10564 on 2017-10-31.
  */
-/*! Here's a block of text to use as input to
-    the regular expression matcher. Note that we'll
-    first extract the block of text by looking for
-    the special delimiters, then process the extracted block.
-!*/
+public class TextFile extends ArrayList<String> {
 
-public class TestSet {
+    public static String read(String fileName) throws IOException{
 
-    public static void main(String[] args) {
-        Set s1 = new HashSet<>();
-        Set s2 = new HashSet<>(Arrays.asList("a", "d", "b"));
-        s1.add("a"); s1.add("b"); s1.add("c");
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
-        Set s3 = new HashSet<>(s1);
-        s3.retainAll(s2);
-        System.out.println(s3);
+        String s;
+        while ((s=reader.readLine())!=null){
+            sb.append(s + "\n");
+        }
+        reader.close();
 
-        Set s4 = new HashSet<>(s2);
-        s4.addAll(s1);
-        System.out.println(s4);
+        return sb.toString();
+    }
 
-//        System.out.println(s1);
-        System.out.println("测试中文");
+    public static void write(String fileName, String text){
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(fileName);
+            writer.print(text);
+            writer.close();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+    public TextFile(String path, String regex) throws IOException{
+        super(Arrays.asList(read(path).split(regex)));
+        if (get(0)=="") remove(0);
+    }
+
+    public TextFile(String path) throws IOException{
+        this(path, "\n");
+    }
+
+    public void write(String path){
+        PrintWriter writer;
+
+        try {
+            writer = new PrintWriter(path);
+
+            for (String item : this){
+                writer.println(item);
+            }
+            writer.close();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws IOException{
+
+        String f = TextFile.read("./src/net/mindview/util/TextFile.java");
+        TextFile.write("out.java", f);
+
+        TextFile t = new TextFile("./src/net/mindview/util/TextFile.java");
+        t.write("out2.java");
+
+        TreeSet<String> treeSet = new TreeSet<>(new TextFile("./src/net/mindview/util/TextFile.java", "\\W+"));
+        System.out.println(treeSet.headSet("a"));
     }
 }
